@@ -1,18 +1,28 @@
-import com.sun.javafx.PlatformUtil;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
-import java.util.List;
+import com.sun.javafx.PlatformUtil;
 
 public class FlightBookingTest {
-
-    WebDriver driver = new ChromeDriver();
+	
+	WebDriver driver;
+	
+	@BeforeMethod
+    public void beforeMethod(){
+		ChromeOptions options = new ChromeOptions();
+        options.addArguments("--disable-notifications");
+		driver = new ChromeDriver(options);
+     }
 
 
     @Test
@@ -23,6 +33,7 @@ public class FlightBookingTest {
         waitFor(2000);
         driver.findElement(By.id("OneWay")).click();
 
+        driver.findElement(By.id("FromTag")).click();
         driver.findElement(By.id("FromTag")).clear();
         driver.findElement(By.id("FromTag")).sendKeys("Bangalore");
 
@@ -75,12 +86,14 @@ public class FlightBookingTest {
         }
     }
 
+    @BeforeSuite
     private void setDriverPath() {
         if (PlatformUtil.isMac()) {
             System.setProperty("webdriver.chrome.driver", "chromedriver");
         }
         if (PlatformUtil.isWindows()) {
             System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+                     
         }
         if (PlatformUtil.isLinux()) {
             System.setProperty("webdriver.chrome.driver", "chromedriver_linux");
