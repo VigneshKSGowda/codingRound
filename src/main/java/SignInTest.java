@@ -2,12 +2,22 @@ import com.sun.javafx.PlatformUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 public class SignInTest {
 
-    WebDriver driver = new ChromeDriver();
+WebDriver driver;
+	
+	@BeforeMethod
+    public void beforeMethod(){
+		ChromeOptions options = new ChromeOptions();
+        options.addArguments("--disable-notifications");
+		driver = new ChromeDriver(options);
+     }
 
     @Test
     public void shouldThrowAnErrorIfSignInDetailsAreMissing() {
@@ -20,6 +30,8 @@ public class SignInTest {
         driver.findElement(By.linkText("Your trips")).click();
         driver.findElement(By.id("SignIn")).click();
 
+        waitFor(4000);
+        driver.switchTo().frame("modal_window");
         driver.findElement(By.id("signInButton")).click();
 
         String errors1 = driver.findElement(By.id("errors1")).getText();
@@ -35,6 +47,7 @@ public class SignInTest {
         }
     }
 
+    @BeforeSuite
     private void setDriverPath() {
         if (PlatformUtil.isMac()) {
             System.setProperty("webdriver.chrome.driver", "chromedriver");

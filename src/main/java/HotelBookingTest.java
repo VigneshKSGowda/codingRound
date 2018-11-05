@@ -1,9 +1,12 @@
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import com.sun.javafx.PlatformUtil;
@@ -14,7 +17,9 @@ WebDriver driver;
 	
 	@BeforeMethod
     public void beforeMethod(){
-		driver = new ChromeDriver();
+		ChromeOptions options = new ChromeOptions();
+        options.addArguments("--disable-notifications");
+		driver = new ChromeDriver(options);
      }
 
 
@@ -33,6 +38,9 @@ WebDriver driver;
 	@Test
 	public void shouldBeAbleToSearchForHotels() {
 		setDriverPath();
+		
+		PageFactory.initElements(driver, this);
+
 
 		driver.get("https://www.cleartrip.com/");
 		hotelLink.click();
@@ -46,6 +54,7 @@ WebDriver driver;
 
 	}
 
+	@BeforeSuite
 	private void setDriverPath() {
 		if (PlatformUtil.isMac()) {
 			System.setProperty("webdriver.chrome.driver", "chromedriver");
